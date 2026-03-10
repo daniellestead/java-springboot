@@ -1,4 +1,4 @@
-package com.example.osho;
+package com.example.app;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,21 +26,20 @@ public class DeviceControllerTest {
     }
 
     @Test
-    public void updateDevice_returnsUpdatedDevice() throws Exception {
+    public void updateDevice_returnsCreated() throws Exception {
         String body = "{\"id\":\"123\",\"name\":\"Lights\",\"status\":\"on\"}";
         mockMvc.perform(post("/updateDevice")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(body))
-                .andExpect(status().isOk())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(body))
+                .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").value("123"))
                 .andExpect(jsonPath("$.status").value("on"))
                 .andExpect(jsonPath("$.lastUpdated").isNotEmpty());
     }
 
     @Test
-    public void getDevice_unknownId_returnsEmptyList() throws Exception {
+    public void getDevice_unknownId_returnsNotFound() throws Exception {
         mockMvc.perform(get("/getDevice").param("id", "unknown"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()").value(0));
+                .andExpect(status().isNotFound());
     }
 }

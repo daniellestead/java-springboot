@@ -1,27 +1,35 @@
 package com.example.app;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.servlet.http.HttpServletResponse;
-import java.text.ParseException;
-import java.util.ArrayList;
+import java.net.URI;
+import java.util.List;
 
 @RestController
 public class DeviceController {
-    // GET endpoint that returns device data.
+
+    @Autowired
+    private DeviceData deviceData;
+
     @GetMapping(value = "/getDevice")
-    public ArrayList<Device> getDevice(
-            @RequestParam(value = "id", defaultValue = "0") String id,
-            @RequestParam(value = "states", defaultValue = "1") Integer states) throws ParseException {
-        return DeviceData.getInstance().getDevice(id, states);
+    public ResponseEntity<List<Device>> getDevice(
+            @RequestParam("id") String id,
+            @RequestParam(value = "states", defaultValue = "1") int states) {
+        List<Device> devices = deviceData.getDevice(id, states);
+        if (devices.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(devices);
     }
 
-    // POST endpoint that upserts device data.
     @PostMapping(value = "/updateDevice", consumes = "application/json", produces = "application/json")
-    public Device updateDevice(@RequestBody Device device, HttpServletResponse response) {
-        response.setHeader("Location", ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/getDevice/" + device.getId()).toUriString());
-        return DeviceData.getInstance().putDevice(device);
+    public ResponseEntity<Device> updateDevice(@RequestBody Device device) {
+        Device saved = deviceData.putDevice(device);
+        URI location = ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path("/getDevice").queryParam("id", saved.getId()).build().toUri();
+        return ResponseEntity.created(location).body(saved);
     }
 }
