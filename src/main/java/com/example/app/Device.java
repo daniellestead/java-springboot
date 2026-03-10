@@ -1,10 +1,13 @@
-package com.example.osho;
+package com.example.app;
 
 public class Device {
     private String id;
     private String name;
     private String status;
     private String lastUpdated;
+
+    public Device() {
+    }
 
     public Device(String id, String name, String status, String lastUpdated) {
         this.id = id;

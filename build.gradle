@@ -12,17 +12,9 @@ repositories {
 	mavenCentral()
 }
 
-dependencyManagement {
-	imports {
-		mavenBom 'io.dropwizard:dropwizard-bom:1.0.9'
-	}
-}
-
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'junit:junit:4.13.1'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testImplementation 'io.dropwizard:dropwizard-testing'
 	testImplementation 'org.mockito:mockito-core:4.1.0'
 	testImplementation 'org.mockito:mockito-junit-jupiter:4.1.0'
 }

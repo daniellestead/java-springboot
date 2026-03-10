@@ -1,4 +1,4 @@
-package com.example.osho;
+package com.example.app;
 
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -13,13 +13,12 @@ public class DeviceController {
     @GetMapping(value = "/getDevice")
     public ArrayList<Device> getDevice(
             @RequestParam(value = "id", defaultValue = "0") String id,
-            @RequestParam(value = "states", defaultValue = "1") Integer states
-    ) throws ParseException {
+            @RequestParam(value = "states", defaultValue = "1") Integer states) throws ParseException {
         return DeviceData.getInstance().getDevice(id, states);
     }
+
     // POST endpoint that upserts device data.
-    @PostMapping(
-            value = "/updateDevice", consumes = "application/json", produces = "application/json")
+    @PostMapping(value = "/updateDevice", consumes = "application/json", produces = "application/json")
     public Device updateDevice(@RequestBody Device device, HttpServletResponse response) {
         response.setHeader("Location", ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("/getDevice/" + device.getId()).toUriString());
